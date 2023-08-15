@@ -1,0 +1,189 @@
+* {
+	border: 0;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+:root {
+	--hue: 223;
+	--bg: hsl(var(--hue),90%,95%);
+	--fg: hsl(var(--hue),90%,5%);
+	--trans-dur: 0.3s;
+	font-size: calc(16px + (20 - 16) * (100vw - 320px) / (1280 - 320));
+}
+body {
+	background-color: var(--bg);
+	color: var(--fg);
+	font: 1em/1.5 sans-serif;
+	height: 100vh;
+	overflow: hidden;
+}
+
+.recursion {
+	font-size: 12px;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	width: 50em;
+	height: 50em;
+	transform: translate(-50%,-50%);
+
+	&__clock {
+		animation-timing-function: cubic-bezier(.29,.05,.76,.39);
+		border-radius: 50%;
+		box-shadow: 0 0 0 5em var(--fg) inset;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 100%;
+		height: 100%;
+		transform: translate(-50%,-50%);
+
+		&,
+		&-hands:before,
+		&-hands:after {
+			animation-duration: 5s;
+			animation-iteration-count: infinite;
+		}
+		&--first {
+			animation-name: clockA;
+			transform: translate(-50%,-50%) scale(10);
+		}
+		&--second {
+			animation-name: clockB;
+			transform: translate(-50%,-50%) scale(1);
+		}
+		&--third {
+			animation-name: clockC;
+			transform: translate(-50%,-50%) scale(0.1);
+		}
+		&--fourth {
+			animation-name: clockD;
+			transform: translate(-50%,-50%) scale(0.02);
+		}
+		&--fifth {
+			animation-name: clockE;
+			transform: translate(-50%,-50%) scale(0);
+		}
+		&-hands {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+
+			&:before,
+			&:after {
+				animation-timing-function: linear;
+				background-color: var(--fg);
+				content: "";
+				display: block;
+				position: absolute;
+				top: 50%;
+				left: calc(50% - 0.5em);
+				width: 1em;
+				transform: rotate(-0.5turn) translateY(2.4em);
+				transform-origin: 50% 0;
+			}
+			&:before {
+				animation-name: hour;
+				height: 8em;
+			}
+			&:after {
+				animation-name: minute;
+				height: 16em;
+			}
+		}
+		&-ticks {
+			width: 100%;
+			height: 100%;
+		}	
+		&-tick {
+			background-color: var(--fg);
+			position: absolute;
+			top: 50%;
+			left: calc(50% - 0.5em);
+			width: 1em;
+			height: 1em;
+			transform: translateY(18em);
+			transform-origin: 50% 0;
+
+			&:nth-child(5n + 1) {
+				height: 2em;
+			}
+
+			@for $t from 2 through 60 {
+				&:nth-child(#{$t}) {
+					transform: rotate(360deg / 60 * ($t - 1)) translateY(18em);
+				}
+			}
+		}	
+	}
+}
+
+/* Dark theme */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: hsl(var(--hue),90%,5%);
+		--fg: hsl(var(--hue),90%,95%);
+	}
+}
+
+/* Animations */
+@keyframes clockA {
+	from {
+		transform: translate(-50%,-50%) scale(10);
+		visibility: visible;
+	}
+	50%,
+	to {
+		transform: translate(-50%,-50%) scale(35);
+		visibility: hidden;
+	}
+}
+@keyframes clockB {
+	from {
+		transform: translate(-50%,-50%) scale(1);
+	}
+	to {
+		transform: translate(-50%,-50%) scale(10);
+	}
+}
+@keyframes clockC {
+	from {
+		transform: translate(-50%,-50%) scale(0.1);
+	}
+	to {
+		transform: translate(-50%,-50%) scale(1);
+	}
+}
+@keyframes clockD {
+	from {
+		transform: translate(-50%,-50%) scale(0.01);
+	}
+	to {
+		transform: translate(-50%,-50%) scale(0.1);
+	}
+}
+@keyframes clockE {
+	from {
+		transform: translate(-50%,-50%) scale(0);
+	}
+	to {
+		transform: translate(-50%,-50%) scale(0.01);
+	}
+}
+@keyframes hour {
+	from {
+		transform: rotate(-0.5turn) translateY(2.4em);
+	}
+	to {
+		transform: rotate(0.5turn) translateY(2.4em);
+	}
+}
+@keyframes minute {
+	from {
+		transform: rotate(-0.5turn) translateY(2.4em);
+	}
+	to {
+		transform: rotate(3.5turn) translateY(2.4em);
+	}
+}
